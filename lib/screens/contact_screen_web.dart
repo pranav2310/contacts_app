@@ -1,35 +1,18 @@
-// import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'dart:convert';
-// import 'package:share_plus/share_plus.dart';
 
-class ContactScreen extends StatelessWidget {
-  const ContactScreen({super.key, required this.xmldata, required this.empId});
-
-  final String xmldata; // JSON string
-  final String empId;
-
-  Map<String, String> _parseJsonData(String jsonString) {
-    final Map<String, dynamic> data = json.decode(jsonString);
-    // Support both list and map for EmpMasterPWAOutput
-    final empRaw = data['EmpMasterPWAOutput'];
-    final emp = empRaw is List ? empRaw[0] : empRaw;
-    return {
-      'Name': emp['EMP_NAME'] ?? '',
-      'Designation': emp['DESIGNATION'] ?? '',
-      'Mobile': emp['MOBILE_NO'] ?? '',
-      'Email': emp['EMAIL_ID'] ?? '',
-      'Location': emp['LOC_NAME'] ?? '',
-      'Department': emp['FUNC'] ?? '',
-    };
-  }
-
+class ContactScreenWeb extends StatelessWidget{
+  const ContactScreenWeb({super.key});
   @override
   Widget build(BuildContext context) {
-    final employeeData = _parseJsonData(xmldata);
-
-    // vCard fields
+    final employeeData = {
+      'Name': 'Prateek Singla',
+      'Designation':'Manager(Information System)',
+      'Mobile': '917042526274',
+      'Email': 'SINGLAP@IINDIANOIL.IN',
+      'Location': 'Uttar Pradesh SO II',
+      'Department': 'Information System',
+    };
     final nameParts = (employeeData['Name'] ?? '').split(' ');
     final lastName = nameParts.length > 1 ? nameParts.last : '';
     final firstName = nameParts.isNotEmpty ? nameParts.first : '';
@@ -43,7 +26,6 @@ TEL;TYPE=CELL:${employeeData['Mobile']}
 EMAIL;TYPE=INTERNET:${employeeData['Email']}
 END:VCARD
 ''';
-
     return Scaffold(
       backgroundColor: const Color(0xFF051951),
       appBar: AppBar(
@@ -100,9 +82,7 @@ END:VCARD
                     child: CircleAvatar(
                       radius: 60,
                       backgroundColor: Colors.grey[300],
-                      backgroundImage: NetworkImage(
-                        'https://xsparsh.indianoil.in/APIManager/empphoto/$empId.jpg',
-                      ),
+                      backgroundImage: AssetImage('assets/507891.jpg') ,
                       onBackgroundImageError: (_, __) {},
                     ),
                   ),
@@ -121,8 +101,9 @@ END:VCARD
       ),
     );
   }
+}
 
-  Widget _buildInfoTile(String title, String value) {
+Widget _buildInfoTile(String title, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Column(
@@ -148,4 +129,3 @@ END:VCARD
       ),
     );
   }
-}
