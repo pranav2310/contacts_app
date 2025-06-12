@@ -1,7 +1,4 @@
-import 'dart:io';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:contacts_app/screens/contact_screen.dart';
-import 'package:contacts_app/screens/contact_screen_web.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -14,11 +11,6 @@ class StartScreen extends StatefulWidget {
 
 class _StartScreenState extends State<StartScreen> {
   final _empIdController = TextEditingController();
-
-  void _getInfoWeb(){
-    Navigator.push(context, MaterialPageRoute(builder: (ctx)=>ContactScreenWeb()));
-  }
-
   Future <void> _getInfo() async{
     final empId = _empIdController.text.trim();
     if(empId.isEmpty){
@@ -28,6 +20,7 @@ class _StartScreenState extends State<StartScreen> {
     final xmllink = "https://xsparsh.indianoil.in/soa-infra/resources/default/MPower/EmpProfile/?emp_code=$empId";
     try{
       final response = await http.get(Uri.parse(xmllink));
+      print(response);
       if(response.statusCode == 200 && response.body.contains("EmpMasterPWAOutput")){
         Navigator.push(
           context, MaterialPageRoute(
@@ -116,15 +109,7 @@ class _StartScreenState extends State<StartScreen> {
                         width: double.infinity,
                         child: ElevatedButton.icon(
                           onPressed: (){
-                            if(kIsWeb){
-                             _getInfoWeb();
-                            }
-                            else if(Platform.isAndroid || Platform.isIOS){
-                              _getInfo();
-                            }
-                            else{
-                             _getInfoWeb();
-                            }
+                            _getInfo();
                           }, 
                           label: const Text(
                             'Get Info',
