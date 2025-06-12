@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ContactScreenWeb extends StatelessWidget{
   const ContactScreenWeb({super.key});
@@ -57,9 +58,11 @@ END:VCARD
                       // await ContactsService.addContact(contact);
                     }, icon: Icon(Icons.person), tooltip: "Save Contact",),
                     IconButton(onPressed: (){
-                    //   Share.share('Name: ${employeeData['Name']}\n'
-                    //   'Mobile: ${employeeData['Mobile']}\n'
-                    //   'Email: ${employeeData['Email']}');
+                    SharePlus.instance.share(
+                        ShareParams(text: 'Name: ${employeeData['Name']}\n'
+                        'Mobile: ${employeeData['Mobile']}\n'
+                        'Email: ${employeeData['Email']}')
+                      );
                     }, icon: Icon(Icons.share), tooltip: "Share Contact"),
                   ],
                 ),

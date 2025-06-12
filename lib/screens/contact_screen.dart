@@ -1,8 +1,8 @@
-// import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'dart:convert';
-// import 'package:share_plus/share_plus.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ContactScreen extends StatelessWidget {
   const ContactScreen({super.key, required this.xmldata, required this.empId});
@@ -39,10 +39,14 @@ BEGIN:VCARD
 VERSION:3.0
 N:$lastName;$firstName
 FN:${employeeData['Name']}
+TITLE:${employeeData['Designation']}
+ORG:${employeeData['Department']}
+ADR;TYPE=WORK:;;${employeeData['Location']}
 TEL;TYPE=CELL:${employeeData['Mobile']}
 EMAIL;TYPE=INTERNET:${employeeData['Email']}
 END:VCARD
 ''';
+
 
     return Scaffold(
       backgroundColor: const Color(0xFF051951),
@@ -67,17 +71,41 @@ END:VCARD
                   ),
                   actions: [
                     IconButton(onPressed: ()async{
-                      // final contact = Contact(
-                      //   givenName: employeeData['Name'],
-                      //   phones: [Item(label: 'mobile', value:employeeData['Mobile'])],
-                      //   emails: [Item(label: "work", value: employeeData['Email'])],
-                      // );
-                      // await ContactsService.addContact(contact);
+                      if(await FlutterContacts.requestPermission()){
+                        final name = employeeData['Name']??'';
+                        final nameParts = name.split(' ');
+                        final firstName = nameParts.isNotEmpty ? nameParts.first : '';
+                        final lastName = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
+                        final contact = Contact()
+                          ..name.first = firstName
+                          ..name.last = lastName
+                          ..phones = [Phone(employeeData['Mobile'] ?? '')]
+                          ..emails = [Email(employeeData['Email'] ?? '')]
+                          ..organizations = [
+                            Organization(
+                              company: employeeData['Department'] ?? '',
+                              title: employeeData['Designation'] ?? '',
+                            )
+                          ];
+                        await contact.insert();
+                        if(context.mounted){
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Contact Saved!')));
+                        }
+                      }
+                      else{
+                        if(context.mounted){
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error !')));
+                        }
+                      }
                     }, icon: Icon(Icons.person), tooltip: "Save Contact",),
                     IconButton(onPressed: (){
-                    //   Share.share('Name: ${employeeData['Name']}\n'
-                    //   'Mobile: ${employeeData['Mobile']}\n'
-                    //   'Email: ${employeeData['Email']}');
+                      SharePlus.instance.share(ShareParams(
+                        text: ('Name: ${employeeData['Name']}\n'
+                          'Mobile: ${employeeData['Mobile']}\n'
+                          'Email: ${employeeData['Email']}'),
+                        subject: 'Contact Info',
+                        title: 'Contact'
+                      )); 
                     }, icon: Icon(Icons.share), tooltip: "Share Contact"),
                   ],
                 ),
