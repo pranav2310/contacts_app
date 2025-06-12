@@ -67,6 +67,7 @@ flutter:
   assets:
       - assets/507891.jpg
       - assets/logo.gif
+      - assets/IndianOilLogo.jpg
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

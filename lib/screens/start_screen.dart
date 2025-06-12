@@ -1,4 +1,5 @@
 import 'package:contacts_app/screens/contact_screen.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -20,7 +21,7 @@ class _StartScreenState extends State<StartScreen> {
     final xmllink = "https://xsparsh.indianoil.in/soa-infra/resources/default/MPower/EmpProfile/?emp_code=$empId";
     try{
       final response = await http.get(Uri.parse(xmllink));
-      print(response);
+      print(response.body);
       if(response.statusCode == 200 && response.body.contains("EmpMasterPWAOutput")){
         Navigator.push(
           context, MaterialPageRoute(
@@ -48,6 +49,49 @@ class _StartScreenState extends State<StartScreen> {
           )
         )
       );
+      if(kIsWeb){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("CORS Error Demo Data")));
+        Navigator.push(
+          context, MaterialPageRoute(
+            builder: (ctx)=>ContactScreen(
+              xmldata: '''
+                {
+                  "EmpMasterPWAOutput" : [ {
+                    "EMP_CODE" : "000000",
+                    "EMP_INI" : "Mr.",
+                    "EMP_NAME" : "IOCL",
+                    "DESIGNATION_CODE" : "00000000",
+                    "DESIGNATION" : "IOCL",
+                    "CURR_COMP_CODE" : "0000",
+                    "CURR_COMP" : "IOCL",
+                    "DIG" : "00000000",
+                    "PA_CODE" : "IOCL",
+                    "PA" : "IOCL",
+                    "PSA_CODE" : "AA00",
+                    "PSA" : "IOCL",
+                    "LOC_CODE" : "0000",
+                    "LOC_NAME" : "IOCL",
+                    "EMP_GRP_CODE" : "A",
+                    "EMP_GRP" : "A",
+                    "EMP_SUB_GRP_CODE" : "AA",
+                    "EMP_SUB_GRP" : "IOCL",
+                    "SALES_GROUP" : "NA",
+                    "SALES_AREA" : "NA",
+                    "FUNC_CODE" : "A00",
+                    "FUNC" : "Information Systems",
+                    "FUNC_AREA_CODE" : "M1900",
+                    "FUNC_AREA" : "Information Systems",
+                    "FUNC_HEAD_YN" : "NA",
+                    "LOCN_IC_YN" : "NA",
+                    "MOBILE_NO" : "NA",
+                    "EMAIL_ID" : "NA"
+                  } ]
+                }''', 
+              empId: empId
+            )
+          )
+        );
+      }
     }
   }
 

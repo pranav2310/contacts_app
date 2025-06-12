@@ -6,11 +6,19 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'dart:convert';
 import 'package:share_plus/share_plus.dart';
 
-class ContactScreen extends StatelessWidget {
+class ContactScreen extends StatefulWidget{
   const ContactScreen({super.key, required this.xmldata, required this.empId});
 
   final String xmldata; // JSON string
   final String empId;
+
+  @override
+  State<StatefulWidget> createState()=>_ContactScreenState();
+}
+
+class _ContactScreenState extends State<ContactScreen> {
+  
+    bool _imageError = false;
 
   Map<String, String> _parseJsonData(String jsonString) {
     final Map<String, dynamic> data = json.decode(jsonString);
@@ -30,7 +38,7 @@ class ContactScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final employeeData = _parseJsonData(xmldata);
+    final employeeData = _parseJsonData(widget.xmldata);
 
     // vCard fields
     final nameParts = (employeeData['Name'] ?? '').split(' ');
@@ -38,17 +46,16 @@ class ContactScreen extends StatelessWidget {
     final firstName = nameParts.isNotEmpty ? nameParts.first : '';
 
     final qrData = '''
-BEGIN:VCARD
-VERSION:3.0
-N:$lastName;$firstName
-FN:${employeeData['Name']}
-TITLE:${employeeData['Designation']}
-ORG:${employeeData['Department']}
-ADR;TYPE=WORK:;;${employeeData['Location']}
-TEL;TYPE=CELL:${employeeData['Mobile']}
-EMAIL;TYPE=INTERNET:${employeeData['Email']}
-END:VCARD
-''';
+      BEGIN:VCARD
+      VERSION:3.0
+      N:$lastName;$firstName
+      FN:${employeeData['Name']}
+      TITLE:${employeeData['Designation']}
+      ORG:${employeeData['Department']}
+      ADR;TYPE=WORK:;;${employeeData['Location']}
+      TEL;TYPE=CELL:${employeeData['Mobile']}
+      EMAIL;TYPE=INTERNET:${employeeData['Email']}
+      END:VCARD''';
 
 
     return Scaffold(
@@ -165,11 +172,18 @@ END:VCARD
                     child: CircleAvatar(
                       radius: 60,
                       backgroundColor: Colors.grey[300],
-                      backgroundImage: NetworkImage(
-                        'https://xsparsh.indianoil.in/APIManager/empphoto/$empId.jpg',
-                      ),
-                      onBackgroundImageError: (_, __) {},
-                    ),
+                      backgroundImage: !_imageError
+                        ? NetworkImage('https://xsparsh.indianoil.in/APIManager/empphoto/${widget.empId}.jpg')
+                        : AssetImage("assets/IndianOilLogo.jpg") as ImageProvider,
+                      onBackgroundImageError: !_imageError
+                        ? (_, __) {
+                            setState(() {
+                              _imageError = true;
+                            });
+                          }
+                        : null,
+                    )
+
                   ),
                   const SizedBox(height: 20),
                   _buildInfoTile('Full Name', employeeData['Name']!),
