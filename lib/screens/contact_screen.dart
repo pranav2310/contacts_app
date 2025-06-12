@@ -18,7 +18,14 @@ class ContactScreen extends StatefulWidget{
 
 class _ContactScreenState extends State<ContactScreen> {
   
-    bool _imageError = false;
+  bool _imageError = false;
+
+  String _safeString(dynamic value){
+    if(value == null)return 'NA';
+    if(value is String)return value;
+    if(value is Map && value.containsKey('@nil'))return 'NA';
+    return value.toString();
+  }
 
   Map<String, String> _parseJsonData(String jsonString) {
     final Map<String, dynamic> data = json.decode(jsonString);
@@ -26,13 +33,13 @@ class _ContactScreenState extends State<ContactScreen> {
     final empRaw = data['EmpMasterPWAOutput'];
     final emp = empRaw is List ? empRaw[0] : empRaw;
     return {
-      'Name': emp['EMP_NAME'] ?? '',
-      'Employee ID': emp['EMP_CODE'].toString(),
-      'Designation': emp['DESIGNATION'] ?? '',
-      'Mobile': emp['MOBILE_NO'] ?? '',
-      'Email': emp['EMAIL_ID'] ?? '',
-      'Location': emp['LOC_NAME'] ?? '',
-      'Department': emp['FUNC'] ?? '',
+      'Name': _safeString( emp['EMP_NAME']),
+      'Employee ID': _safeString( emp['EMP_CODE']),
+      'Designation': _safeString( emp['DESIGNATION']),
+      'Mobile': _safeString( emp['MOBILE_NO']),
+      'Email': _safeString( emp['EMAIL_ID']),
+      'Location': _safeString( emp['LOC_NAME']),
+      'Department': _safeString( emp['FUNC'] ),
     };
   }
 
