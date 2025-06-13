@@ -36,7 +36,7 @@ class _ContactScreenState extends State<ContactScreen> {
       'Name': _safeString( emp['EMP_NAME']),
       'Employee ID': _safeString( emp['EMP_CODE']),
       'Designation': _safeString( emp['DESIGNATION']),
-      'Mobile': _safeString( emp['MOBILE_NO']),
+      'Mobile': (_safeString( emp['MOBILE_NO'])).length==10?(_safeString(emp['MOBILE_NO'])):(_safeString(emp['MOBILE_NO']).substring(2)),
       'Email': _safeString( emp['EMAIL_ID']),
       'Location': _safeString( emp['LOC_NAME']),
       'Department': _safeString( emp['FUNC'] ),
@@ -52,17 +52,17 @@ class _ContactScreenState extends State<ContactScreen> {
     final lastName = nameParts.length > 1 ? nameParts.last : '';
     final firstName = nameParts.isNotEmpty ? nameParts.first : '';
 
-    final qrData = '''
-      BEGIN:VCARD
-      VERSION:3.0
-      N:$lastName;$firstName
-      FN:${employeeData['Name']}
-      TITLE:${employeeData['Designation']}
-      ORG:${employeeData['Department']}
-      ADR;TYPE=WORK:;;${employeeData['Location']}
-      TEL;TYPE=CELL:${employeeData['Mobile']}
-      EMAIL;TYPE=INTERNET:${employeeData['Email']}
-      END:VCARD''';
+    final qrData = 'BEGIN:VCARD\n'
+    'VERSION:3.0\n'
+    'N:$lastName;$firstName\n'
+    'FN:${employeeData['Name']}\n'
+    'TITLE:${employeeData['Designation']}\n'
+    'ORG: IOCL\n'
+    'ADR;TYPE=WORK:;;${employeeData['Location']}\n'
+    'TEL;TYPE=CELL:${employeeData['Mobile']}\n'
+    'EMAIL;TYPE=INTERNET:${employeeData['Email']}\n'
+    'END:VCARD\n';
+
 
 
     return Scaffold(
