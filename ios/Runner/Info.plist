@@ -47,6 +47,12 @@
 	<true/>
 	<key>NSContactsUsageDescription</key>
 	<string>This app needs access to your contacts to save employee details.</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+  		<key>NSAllowsArbitraryLoads</key>
+  		<true/>
+	</dict>
+
 
 </dict>
 </plist>
