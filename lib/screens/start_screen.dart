@@ -13,7 +13,8 @@ class StartScreen extends StatefulWidget {
 class _StartScreenState extends State<StartScreen> {
   final _empIdController = TextEditingController();
   Future <void> _getInfo() async{
-    final empId = _empIdController.text.trim();
+    String empId = _empIdController.text.trim();
+    empId = empId.replaceFirst(RegExp(r'^0+'), '');
     if(empId.isEmpty){
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please Enter Employee ID')));
       return;
