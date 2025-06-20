@@ -27,11 +27,11 @@
   - Building APK
     ```bash
     flutter build apk --release
-##Configuration
+## Configuration
 - App Icon: Set using flutter_launcher_icons.
 - Assets: Profile fallback images and logos must be listed in `pubspec.yaml` under `assets:`.
 
-##Tech Stack
+## Tech Stack
 - Flutter (UI, cross-platform)
 - flutter_contacts (contact saving)
 - qr_flutter (QR code generation)
@@ -39,7 +39,7 @@
 - http (API calls)
 - xml (optional, for XML API responses)
 
-##Troubleshooting
+## Troubleshooting
 - CORS Errors (Web): Demo data is shown if the API cannot be fetched due to CORS restrictions.
 - App Icon Not Updating: Run `flutter pub run flutter_launcher_icons` and do a full rebuild.
 
